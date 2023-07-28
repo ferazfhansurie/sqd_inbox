@@ -17,11 +17,14 @@ export const ConversationList = ({
 	// loadOlderConversations,
 	className,
 }: ConversationListProps) => {
+	
 	return (
 		<div className={`flex flex-col items-center ${className}`}>
 			<div className="overflow-y-scroll flex w-full flex-col divide-y-2">
+				
 				{conversations
 					// ordena pela mensagem com data mais recente
+					
 					.sort((a, b) => {
 						// a.messages.sort(
 						// 	(a, b) =>
@@ -52,7 +55,7 @@ export const ConversationList = ({
 						>
 							<ConversationItem
 								conversation={conversation}
-								userName={'User'}
+								userName={'name'}
 								isSelected={
 									conversation.id === selectedConversationId
 								}
