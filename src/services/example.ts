@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 
 function createApiInstance(): AxiosInstance {
 	const api = axios.create({
-		baseURL: 'https://cool-cranachan-9977ef.netlify.app',
+		baseURL: 'https://jutasoftwareinbox.netlify.app/',
 	});
 
 	api.defaults.headers.common['Authorization'] = `Bearer ...`;
