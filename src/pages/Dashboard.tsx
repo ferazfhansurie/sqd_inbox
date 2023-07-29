@@ -4,6 +4,8 @@ import { Conversation } from '@botpress/client';
 import { ConversationDetails } from '../components/ConversationDetails';
 import { ConversationList } from '../components/ConversationList';
 import { useEffect, useState } from 'react';
+import { User, getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { getFirestore, doc, getDoc } from 'firebase/firestore/lite';
 
 export interface ConversationWithMessagesAndUsers extends Conversation {
 	// messages: Message[];
@@ -17,70 +19,94 @@ export const Dashboard = () => {
 	const [conversations, setConversations] = useState<
 		ConversationWithMessagesAndUsers[]
 	>([]);
+	const auth = getAuth();
+	const [user, setUser] = useState<User | null>(null);
+	const handleSignOut = () => {
+        signOut(auth)
+            .then(() => {
+                // Sign-out successful.
+            })
+            .catch((error) => {
+                // An error happened.
+                console.error('Error signing out:', error);
+            });
+    };
 
 	useEffect(() => {
-		(async () => {
-			try {
-				const allConversations: ConversationWithMessagesAndUsers[] = [];
-				let nextTokenConversations: string | undefined;
+        // Set up an auth state observer to track the user's authentication state
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+        });
 
-				do {
-					const listConversations =
-						await botpressClient.listConversations({
-							nextToken: nextTokenConversations,
-						});
+        // Clean up the observer when the component unmounts
+        return () => unsubscribe();
+    }, [auth]);
+	useEffect(() => {
+    // Check if the user is signed in and if the user's email is a non-null string
+    if (user && typeof user.email === 'string') {
+        // Get a reference to the Firestore database
+        const db = getFirestore();
 
-					const conversationsWithData: ConversationWithMessagesAndUsers[] =
-						[];
+        // Set the path to the document in Firestore using the user's email as the document ID
+        const userDocRef = doc(db, 'users', user.email); // 'users' is the name of the collection, and 'user.email' is the document ID
 
-					listConversations.conversations.forEach(
-						async (conversation) => {
-							// let messages: Message[] = [];
-							// let nextTokenMessages: string | undefined;
-
-							// let users: User[] = [];
-							// let nextTokenUsers: string | undefined;
-
-							// do {
-							// 	const listMessages =
-							// 		await botpressClient.listMessages({
-							// 			conversationId: conversation.id,
-							// 		});
-
-							// 	messages.push(...listMessages.messages);
-							// 	nextTokenMessages = listMessages.meta.nextToken;
-							// } while (nextTokenMessages);
-
-							// do {
-							// 	const listUsers =
-							// 		await botpressClient.listUsers({
-							// 			conversationId: conversation.id,
-							// 		});
-
-							// 	users.push(...listUsers.users);
-							// 	nextTokenUsers = listUsers.meta.nextToken;
-							// } while (nextTokenUsers);
-
-							conversationsWithData.push({
-								...conversation,
-								// messages,
-								// users,
-							});
-						}
-					);
-
-					allConversations.push(...conversationsWithData);
-					nextTokenConversations = listConversations.meta.nextToken;
-				} while (nextTokenConversations);
-
-				setConversations(allConversations);
-			} catch (error: any) {
-				console.log(error.response?.data || error);
-
-				toast.error("Couldn't load older conversations");
-			}
-		})();
-	}, []);
+        // Fetch the data from Firestore
+        getDoc(userDocRef)
+            .then((docSnapshot) => {
+                if (docSnapshot.exists()) {
+                    // Data exists for this user
+                    const userData = docSnapshot.data();
+                    console.log('User Data:', userData);
+                    // You can now use the data retrieved from Firestore in your application
+                } else {
+                    console.log('User data does not exist');
+                }
+            })
+            .catch((error) => {
+                console.error('Error fetching user data:', error);
+            });
+    }
+}, [user]);
+useEffect(() => {
+	(async () => {
+	  try {
+		const allConversations: ConversationWithMessagesAndUsers[] = [];
+		let nextTokenConversations: string | undefined;
+  
+		do {
+		  // Adding a check for botpressClient to handle the 'null' possibility
+		  const listConversations =
+			botpressClient &&
+			(await botpressClient.listConversations({
+			  nextToken: nextTokenConversations,
+			}));
+  
+		  if (!listConversations) {
+			// Handle the case when botpressClient is null
+			return;
+		  }
+  
+		  const conversationsWithData: ConversationWithMessagesAndUsers[] = [];
+  
+		  listConversations.conversations.forEach(async (conversation) => {
+			conversationsWithData.push({
+			  ...conversation,
+			});
+		  });
+  
+		  allConversations.push(...conversationsWithData);
+		  nextTokenConversations = listConversations.meta.nextToken;
+		} while (nextTokenConversations);
+  
+		setConversations(allConversations);
+	  } catch (error: any) {
+		console.log(error);
+		console.log(error.response?.data || error);
+  
+		toast.error("Couldn't load older conversations");
+	  }
+	})();
+  }, []);
 
 	return (
 		<div className="flex h-screen">
@@ -119,6 +145,8 @@ export const Dashboard = () => {
 					)}
 				</div>
 			</div>
+			{user && <p>User ID: {user.email}</p>}
+			<button onClick={handleSignOut}>Sign Out</button>
 		</div>
 	);
 };
