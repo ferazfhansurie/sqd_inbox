@@ -1,4 +1,4 @@
-import { Conversation } from '@botpress/client';
+import { Conversation, } from '@botpress/client';
 import { ConversationItem } from './ConversationItem';
 import { ConversationWithMessagesAndUsers } from '../pages/Dashboard';
 
@@ -18,10 +18,11 @@ export const ConversationList = ({
 	className,
 }: ConversationListProps) => {
 	
+
 	return (
 		<div className={`flex flex-col items-center ${className}`}>
 			<div className="overflow-y-scroll flex w-full flex-col divide-y-2">
-				
+		
 				{conversations
 					// ordena pela mensagem com data mais recente
 					
@@ -47,22 +48,27 @@ export const ConversationList = ({
 							new Date(a.updatedAt).getTime()
 						);
 					})
-					.map((conversation) => (
-						<button
+					
+					.map((conversation) => {
+						const userName = conversation.tags?.['whatsapp:userPhone'] ?? ''; // Replace 'whatsapp:userPhone' with the correct tag name
+			
+						return (
+						  <button
 							className="w-full"
 							onClick={() => onSelectConversation(conversation)}
 							key={conversation.id}
-						>
+						  >
 							<ConversationItem
-								conversation={conversation}
-								userName={'name'}
-								isSelected={
-									conversation.id === selectedConversationId
-								}
+							  conversation={conversation}
+							  userName={userName}
+							  isSelected={conversation.id === selectedConversationId}
 							/>
-						</button>
-					))}
+						  </button>
+						);
+					  })}
+					
 			</div>
+			
 			{/* {loadOlderConversations && (
 				<button
 					className="rounded-xl p-2 m-3 border-2"
