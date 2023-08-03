@@ -19,6 +19,8 @@ export const Dashboard = () => {
 	const [conversations, setConversations] = useState<
 		ConversationWithMessagesAndUsers[]
 	>([]);
+	  // Add the search query state
+	  const [searchQuery, setSearchQuery] = useState<string>('');
 	const auth = getAuth();
 	const [user, setUser] = useState<User | null>(null);
 	const handleSignOut = () => {
@@ -98,55 +100,71 @@ useEffect(() => {
 		  nextTokenConversations = listConversations.meta.nextToken;
 		} while (nextTokenConversations);
   
-		setConversations(allConversations);
-	  } catch (error: any) {
-		console.log(error);
-		console.log(error.response?.data || error);
-  
-		toast.error("Couldn't load older conversations");
-	  }
-	})();
-  }, []);
+		const filteredConversations = allConversations.filter((conversation) =>
+		conversation.tags?.['whatsapp:userPhone']?.includes(searchQuery)
+	  );
 
-	return (
-		<div className="flex h-screen">
-			<div className="rounded-lg mx-auto max-w-7xl border-2 shadow-2xl flex w-full my-24 divide-x-4">
-				<ConversationList
-					conversations={conversations}
-					className="w-1/4"
-					selectedConversationId={selectedConversation?.id}
-					onSelectConversation={(conversation: Conversation) =>
-						setSelectedConversation(conversation)
-					}
-					// loadOlderConversations={
-					// 	nextToken ? loadOlderConversations : undefined
-					// }
-				/>
+	  setConversations(filteredConversations);
+	} catch (error: any) {
+	  console.log(error);
+	  console.log(error.response?.data || error);
 
-				<div className="w-3/4 flex">
-					{selectedConversation ? (
-						<ConversationDetails
-							conversation={selectedConversation}
-							className="divide-x-4 w-full"
-							onDeleteConversation={(conversationId: string) => {
-								setSelectedConversation(undefined);
-								setConversations(
-									conversations.filter(
-										(conversation) =>
-											conversation.id !== conversationId
-									)
-								);
-							}}
-						/>
-					) : (
-						<div className="bg-gray-100 p-5 text-lg font-medium rounded-xl my-auto mx-auto">
-							Select a conversation
-						</div>
-					)}
-				</div>
-			</div>
-			{user && <p>User ID: {user.email}</p>}
-			<button onClick={handleSignOut}>Sign Out</button>
-		</div>
-	);
+	  toast.error("Couldn't load older conversations");
+	}
+  })();
+}, [searchQuery]);
+
+return (
+    <div className="flex flex-col items-center h-screen bg-gray-100">
+      {/* Search input field */}
+      <div className="mt-4">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search by User Phone..."
+          className="w-80 px-4 py-2 text-gray-800 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+        />
+      </div>
+
+      <div className="rounded-lg mx-auto max-w-7xl border-2 shadow-2xl flex w-full my-8 divide-x-4">
+        <ConversationList
+          conversations={conversations}
+          className="w-1/4"
+          selectedConversationId={selectedConversation?.id}
+          onSelectConversation={(conversation: Conversation) =>
+            setSelectedConversation(conversation)
+          }
+        />
+
+        <div className="w-3/4 flex">
+          {selectedConversation ? (
+            <ConversationDetails
+              conversation={selectedConversation}
+              className="divide-x-4 w-full"
+              onDeleteConversation={(conversationId: string) => {
+                setSelectedConversation(undefined);
+                setConversations(
+                  conversations.filter(
+                    (conversation) => conversation.id !== conversationId
+                  )
+                );
+              }}
+            />
+          ) : (
+            <div className="bg-gray-100 p-5 text-lg font-medium rounded-xl my-auto mx-auto">
+              Select a conversation
+            </div>
+          )}
+        </div>
+      </div>
+      {user && <p>User ID: {user.email}</p>}
+      <button
+        onClick={handleSignOut}
+        className="px-4 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+      >
+        Sign Out
+      </button>
+    </div>
+  );
 };
