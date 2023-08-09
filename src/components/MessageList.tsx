@@ -76,66 +76,65 @@ export const MessageList = ({
 
 	return (
 		<div className="flex flex-col h-full p-5">
-			<div className="flex-grow flex flex-col gap-1 overflow-y-scroll pr-2">
-				{isDefinedAndHasItems(messages) ? (
-					<>
-						{loadOlderMessages && (
-							<button
-								className="rounded-xl p-2 border-2 self-center mb-5"
-								onClick={() => {
-									loadOlderMessages();
-									setClickedLoadOlderMessages(true);
-								}}
-							>
-								Load older messages
-							</button>
-						)}
-						{messageList
-							.sort(
-								(a, b) =>
-									new Date(a.createdAt).getTime() -
-									new Date(b.createdAt).getTime()
-							)
-							.map((message, index, list) => (
-								<MessageItem
-									message={message}
-									key={message.id}
-									className={
-										list[index - 1]?.direction !==
-										message.direction
-											? 'mt-2'
-											: ''
-									}
-								/>
-							))}
-						<div ref={messageListEndRef} />
-					</>
-				) : (
-					<div className="self-center bg-gray-100 p-5 text-lg font-medium rounded-xl my-auto">
-						There are no messages...
-					</div>
-				)}
-			</div>
-			<div className="flex gap-2 items-center flex-shrink-0 mt-5">
-				<input
-					type="text"
-					className="w-full rounded-xl border-2 p-4"
-					placeholder="Type something..."
-					value={messageInput}
-					onChange={(e) => setMessageInput(e.target.value)}
-				/>
-				<button
-					className="bg-blue-500 text-white rounded-xl p-4"
-					onClick={() => handleSendMessage()}
-					onKeyDown={(e) => {
-						if (e.key === 'Enter' || e.keyCode === 13) {
-							handleSendMessage();
-						}
+		  <div className="flex-grow flex flex-col gap-1 overflow-y-auto pr-2">
+			{isDefinedAndHasItems(messages) ? (
+			  <>
+				{loadOlderMessages && (
+				  <button
+					className="rounded-xl p-2 border-2 self-center mb-5"
+					onClick={() => {
+					  loadOlderMessages();
+					  setClickedLoadOlderMessages(true);
 					}}
-				>
-					Send
-				</button>
-			</div>
+				  >
+					Load older messages
+				  </button>
+				)}
+				{messageList
+				  .sort(
+					(a, b) =>
+					  new Date(a.createdAt).getTime() -
+					  new Date(b.createdAt).getTime()
+				  )
+				  .map((message, index, list) => (
+					<MessageItem
+					  message={message}
+					  key={message.id}
+					  className={
+						list[index - 1]?.direction !== message.direction
+						  ? 'mt-2'
+						  : ''
+					  }
+					/>
+				  ))}
+				<div ref={messageListEndRef} />
+			  </>
+			) : (
+			  <div className="self-center bg-gray-100 p-5 text-lg font-medium rounded-xl my-auto">
+				There are no messages...
+			  </div>
+			)}
+		  </div>
+		  <div className="flex gap-2 items-center flex-shrink-0 mt-5">
+			<input
+			  type="text"
+			  className="w-full rounded-xl border-2 p-4"
+			  placeholder="Type something..."
+			  value={messageInput}
+			  onChange={(e) => setMessageInput(e.target.value)}
+			/>
+			<button
+			  className="bg-blue-500 text-white rounded-xl p-4"
+			  onClick={() => handleSendMessage()}
+			  onKeyDown={(e) => {
+				if (e.key === 'Enter' || e.keyCode === 13) {
+				  handleSendMessage();
+				}
+			  }}
+			>
+			  Send
+			</button>
+		  </div>
 		</div>
-	);
-};
+	  );
+	};

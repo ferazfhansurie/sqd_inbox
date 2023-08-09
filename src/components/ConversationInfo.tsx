@@ -89,7 +89,7 @@ export const ConversationInfo = ({
 				{Object.keys(conversation.tags).map((tag) => {
 					return (
 						<span
-							className="bg-gray-200 w-full rounded-xl px-2 py-1 text-xs"
+							className="bg-black-200 w-full rounded-xl px-2 py-1 text-xs"
 							key={tag}
 						>
 							🏷️ <span className="font-medium">{tag}</span>{' '}

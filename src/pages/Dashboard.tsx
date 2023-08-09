@@ -6,7 +6,8 @@ import { ConversationList } from '../components/ConversationList';
 import { useEffect, useState } from 'react';
 import { User, getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore/lite';
-
+import defaultAvatarImg from '../assets/jutaicon.png';
+import '../style.css';
 export interface ConversationWithMessagesAndUsers extends Conversation {
 	// messages: Message[];
 	// users: User[];
@@ -115,56 +116,60 @@ useEffect(() => {
 }, [searchQuery]);
 
 return (
-    <div className="flex flex-col items-center h-screen bg-gray-100">
-      {/* Search input field */}
-      <div className="mt-4">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search by User Phone..."
-          className="w-80 px-4 py-2 text-gray-800 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-        />
-      </div>
+  <div className="dashboard-container">
+     
+    <div className="search-container">
+    <img
+					src={defaultAvatarImg}
+					alt="Default avatar"
+					className="h-12"
+				/>
+      <input
+        type="text"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        placeholder="Search by User Phone..."
+        className="search-input"
+      />
+    </div>
 
-      <div className="rounded-lg mx-auto max-w-7xl border-2 shadow-2xl flex w-full my-8 divide-x-4">
+    <div className="conversation-container">
+      <div className="conversation-list">
         <ConversationList
           conversations={conversations}
-          className="w-1/4"
           selectedConversationId={selectedConversation?.id}
           onSelectConversation={(conversation: Conversation) =>
             setSelectedConversation(conversation)
           }
         />
-
-        <div className="w-3/4 flex">
-          {selectedConversation ? (
-            <ConversationDetails
-              conversation={selectedConversation}
-              className="divide-x-4 w-full"
-              onDeleteConversation={(conversationId: string) => {
-                setSelectedConversation(undefined);
-                setConversations(
-                  conversations.filter(
-                    (conversation) => conversation.id !== conversationId
-                  )
-                );
-              }}
-            />
-          ) : (
-            <div className="bg-gray-100 p-5 text-lg font-medium rounded-xl my-auto mx-auto">
-              Select a conversation
-            </div>
-          )}
-        </div>
       </div>
-      {user && <p>User ID: {user.email}</p>}
-      <button
-        onClick={handleSignOut}
-        className="px-4 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-      >
-        Sign Out
-      </button>
+
+      <div className="conversation-details">
+        {selectedConversation ? (
+          <ConversationDetails
+            conversation={selectedConversation}
+            onDeleteConversation={(conversationId: string) => {
+              setSelectedConversation(undefined);
+              setConversations(
+                conversations.filter(
+                  (conversation) => conversation.id !== conversationId
+                )
+              );
+            }}
+          />
+        ) : (
+          <div className="bg-gray-100 p-5 text-lg font-medium rounded-xl my-auto">
+            Select a conversation
+          </div>
+        )}
+      </div>
     </div>
-  );
+
+    {user && <p className="text-center mt-4">User ID: {user.email}</p>}
+
+    <button onClick={handleSignOut} className="sign-out-button">
+      Sign Out
+    </button>
+  </div>
+);
 };
