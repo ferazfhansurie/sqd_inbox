@@ -352,7 +352,51 @@
  font-size:15px;
  font-family:Helvetica Neue,Helvetica,Arial,sans-serif;
 }
+/* Pagination container */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
 
+/* Pagination buttons */
+.pagination-container button {
+  padding: 0.5rem 1rem;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333333;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.pagination-container button:hover {
+  background-color: #f0f0f0;
+}
+
+.pagination-container span {
+  margin: 0 1rem;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #22c014;
+}
+
+/* Disable previous page button when at the first page */
+.pagination-container button:first-child:disabled {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
+/* Disable next page button when there are fewer than 10 conversations */
+.pagination-container button:last-child:disabled {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
 /* Span Tag */
 .h-full .items-end .px-3 span{
  font-weight:500;

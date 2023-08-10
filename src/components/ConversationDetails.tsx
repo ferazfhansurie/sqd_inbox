@@ -137,7 +137,7 @@ export const ConversationDetails = ({
 		<div className={`flex ${className}`}>
 		  <div className="w-2/3 flex flex-col">
 			{isLoadingMessages ? (
-			  <div className="self-center bg-gray-100 p-5 text-lg font-medium rounded-xl my-auto">
+			  <div className="self-center bg-black-100 p-5 text-lg font-medium rounded-xl my-auto">
 				Loading messages...
 			  </div>
 			) : (

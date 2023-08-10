@@ -1,4 +1,4 @@
-import { Conversation, } from '@botpress/client';
+import { Conversation, User, } from '@botpress/client';
 import { ConversationItem } from './ConversationItem';
 import { ConversationWithMessagesAndUsers } from '../pages/Dashboard';
 
@@ -7,6 +7,7 @@ interface ConversationListProps {
 	selectedConversationId?: string;
 	onSelectConversation: (conversation: Conversation) => void;
 	className?: string;
+	users:User[]
 	// loadOlderConversations?: () => void;
 }
 
@@ -15,6 +16,7 @@ export const ConversationList = ({
 	selectedConversationId,
 	onSelectConversation,
 	className,
+	users
   }: ConversationListProps) => {
 	return (
 		<div className={`flex flex-col ${className}`}>
@@ -22,7 +24,25 @@ export const ConversationList = ({
 			{conversations
 			  .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
 			  .map((conversation) => {
-				const userName = conversation.tags?.['whatsapp:userPhone'] ?? '';
+				
+		
+				let userName = ""
+					for (const user of users) {
+					  const userId = user.tags?.['whatsapp:userId'];
+					 
+				  
+					  if (conversation.tags?.['whatsapp:userPhone'] === userId) {
+						
+						 userName = user.tags?.['whatsapp:name'] ?? '';
+						// You can update the conversation or perform any other action here
+						// For example:
+						// conversation.tags?.['whatsapp:matchedUserName'] = userName;
+						
+						break; // Assuming a user can only match once, you can remove this if not
+					  }
+					  userName = conversation.tags?.['whatsapp:userPhone'] ?? '';
+					}
+			
 	
 				return (
 				  <button
