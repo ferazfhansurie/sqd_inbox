@@ -4,7 +4,6 @@ import { Conversation, } from '@botpress/client';
 import { ConversationDetails } from '../components/ConversationDetails';
 import { ConversationList } from '../components/ConversationList';
 import { useEffect, useState } from 'react';
-import { User, getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { User as BotpressUser } from '@botpress/client/dist/gen';
 import defaultAvatarImg from '../assets/jutaicon.png';
 import '../style.css';
@@ -29,8 +28,7 @@ export const Dashboard = () => {
     const [users, setUsers] = useState<BotpressUser[]>([]);
     const [isLoadingConversations, setIsLoadingConversations] = useState(true);
 
-    const auth = getAuth();
-    const [user, setUser] = useState<User | null>(null);
+ 
       // Throttle function
   const throttle = (func: Function, limit: number) => {
     let inThrottle: boolean;
@@ -45,26 +43,8 @@ export const Dashboard = () => {
 
   const throttledFetchData = throttle(fetchData, 1000); 
 
-    const handleSignOut = () => {
-          signOut(auth)
-              .then(() => {
-                  // Sign-out successful.
-              })
-              .catch((error) => {
-                  // An error happened.
-                  console.error('Error signing out:', error);
-              });
-      };
+
   
-    useEffect(() => {
-          // Set up an auth state observer to track the user's authentication state
-          const unsubscribe = onAuthStateChanged(auth, (user) => {
-              setUser(user);
-          });
-  
-          // Clean up the observer when the component unmounts
-          return () => unsubscribe();
-      }, [auth]);
 
 
 
