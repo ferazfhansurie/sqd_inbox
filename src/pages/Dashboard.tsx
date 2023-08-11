@@ -242,11 +242,6 @@ return (
       </button>
     </div>
 
-    {user && <p className="text-center mt-4">User ID: {user.email}</p>}
-
-    <button onClick={handleSignOut} className="sign-out-button">
-      Sign Out
-    </button>
 
   
   </div>
