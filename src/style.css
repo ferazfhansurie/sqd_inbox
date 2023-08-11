@@ -24,10 +24,13 @@
   .dashboard-container {
     display: flex;
     flex-direction: column;
-
     overflow: hidden; /* Hide any overflowing content */
   }
-  
+  .dashboard-login {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Hide any overflowing content */
+  }
   .search-container {
     padding: 10px;
   }

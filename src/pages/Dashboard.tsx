@@ -31,6 +31,20 @@ export const Dashboard = () => {
 
     const auth = getAuth();
     const [user, setUser] = useState<User | null>(null);
+      // Throttle function
+  const throttle = (func: Function, limit: number) => {
+    let inThrottle: boolean;
+    return function (this: any, ...args: any[]) {
+      if (!inThrottle) {
+        func.apply(this, args);
+        inThrottle = true;
+        setTimeout(() => (inThrottle = false), limit);
+      }
+    };
+  };
+
+  const throttledFetchData = throttle(fetchData, 1000); 
+
     const handleSignOut = () => {
           signOut(auth)
               .then(() => {
@@ -54,96 +68,76 @@ export const Dashboard = () => {
 
 
 
-      useEffect(() => {
-        (async () => {
-          try {
-            setIsLoadingConversations(true);
-            setIsLoadingMessages(true);
-      
-            const allConversations: ConversationWithMessagesAndUsers[] = [];
-            let nextTokenConversations: string | undefined;
-      
-            do {
-              const listConversations =
-                botpressClient &&
-                (await botpressClient.listConversations({
-                  nextToken: nextTokenConversations,
-                }));
-      
-              if (!listConversations) {
-                return;
-              }
-      
-              const conversationsWithData: ConversationWithMessagesAndUsers[] = [];
-      
-              listConversations.conversations.forEach(async (conversation) => {
-                conversationsWithData.push({
-                  ...conversation,
-                });
-              });
-      
-              allConversations.push(...conversationsWithData);
-              nextTokenConversations = listConversations.meta.nextToken;
-            } while (nextTokenConversations);
-            
-            // Apply the search filter to all conversations
-            let filteredConversations = allConversations.filter((conversation) =>
-              conversation.tags?.['whatsapp:userPhone']?.includes(searchQuery)
-            );
-      
-            const conversationsPerPage = 10;
-            const startIndex = (pageNumber - 1) * conversationsPerPage;
-            const endIndex = startIndex + conversationsPerPage;
-      
-            const paginatedConversations = filteredConversations.slice(
-              startIndex,
-              endIndex
-            );
-      
-            // Batch fetch messages and users for the paginated conversations
-       /*     const messagesPromises = paginatedConversations.map(async (conversation) => {
-              try {
-                const getMessages = await botpressClient.listMessages({
-                  conversationId: conversation.id,
-                });
-                return getMessages.messages;
-              } catch (error: any) {
-                return [];
-              }
-            });*/
-      
-            const usersPromises = paginatedConversations.map(async (conversation) => {
-              try {
-                const getUsers = await botpressClient.listUsers({
-                  conversationId: conversation.id,
-                });
-            
-                const usersWithData = getUsers.users.map(user => ({
-                  ...user,
-                  conversationId: conversation.id, // Include conversation ID for reference
-                }));
-            
-                return usersWithData;
-              } catch (error: any) {
-                return [];
-              }
-            });
-            const usersResults = await Promise.all(usersPromises);
-            const allUsers = usersResults.flat();
-          
-            // Update state atomically
-            setConversations(paginatedConversations);
-            setUsers(allUsers);
-            console.log(allUsers);
-          } catch (error: any) {
-            console.log(error);
-            console.log(error.response?.data || error);
-          } finally {
-            setIsLoadingConversations(false);
-            setIsLoadingMessages(false);
-          }
-        })();
-      }, [searchQuery, pageNumber]);
+       useEffect(() => {
+    throttledFetchData();
+  }, [searchQuery, pageNumber]);
+
+  async function fetchData() {
+    try {
+      setIsLoadingConversations(true);
+      setIsLoadingMessages(true);
+
+      const allConversations: Conversation[] = [];
+      let nextTokenConversations: string | undefined;
+
+      do {
+        const listConversations =
+          botpressClient &&
+          (await botpressClient.listConversations({
+            nextToken: nextTokenConversations,
+          }));
+
+        if (!listConversations) {
+          return;
+        }
+
+        allConversations.push(...listConversations.conversations);
+        nextTokenConversations = listConversations.meta.nextToken;
+      } while (nextTokenConversations);
+
+      const filteredConversations = allConversations.filter((conversation) =>
+        conversation.tags?.['whatsapp:userPhone']?.includes(searchQuery)
+      );
+
+      const conversationsPerPage = 10;
+      const startIndex = (pageNumber - 1) * conversationsPerPage;
+      const endIndex = startIndex + conversationsPerPage;
+
+      const paginatedConversations = filteredConversations.slice(
+        startIndex,
+        endIndex
+      );
+
+      const usersPromises = paginatedConversations.map(async (conversation) => {
+        try {
+          const getUsers = await botpressClient.listUsers({
+            conversationId: conversation.id,
+          });
+
+          const usersWithData = getUsers.users.map((user) => ({
+            ...user,
+            conversationId: conversation.id, // Include conversation ID for reference
+          }));
+
+          return usersWithData;
+        } catch (error: any) {
+          return [];
+        }
+      });
+
+      const usersResults = await Promise.all(usersPromises);
+      const allUsers = usersResults.flat();
+
+      setConversations(paginatedConversations);
+      setUsers(allUsers);
+    } catch (error: any) {
+      console.error(error);
+    } finally {
+      setIsLoadingConversations(false);
+      setIsLoadingMessages(false);
+    }
+  }
+
 return (
   <div className="dashboard-container">
     <div className="search-container">
@@ -233,12 +227,12 @@ return (
     </div>
 
     <div className="pagination-container">
-      <button
-        onClick={() => setPageNumber((prevPage) => prevPage - 1)}
-        disabled={pageNumber === 1}
-      >
-        Previous Page
-      </button>
+    <button
+  onClick={() => setPageNumber((prevPage) => prevPage - 1)}
+  disabled={pageNumber === 1}
+>
+  Previous Page
+</button>
       <span>Page {pageNumber}</span>
       <button
         onClick={() => setPageNumber((prevPage) => prevPage + 1)}
