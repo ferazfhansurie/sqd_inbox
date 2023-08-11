@@ -1,6 +1,6 @@
 
 import { botpressClient } from '../services/botpress';
-import { Conversation, Message } from '@botpress/client';
+import { Conversation, } from '@botpress/client';
 import { ConversationDetails } from '../components/ConversationDetails';
 import { ConversationList } from '../components/ConversationList';
 import { useEffect, useState } from 'react';
@@ -25,12 +25,8 @@ export const Dashboard = () => {
 	  // Add the search query state
     const [pageNumber, setPageNumber] = useState(1);
 	  const [searchQuery, setSearchQuery] = useState<string>('');
-    const [messages, setMessages] = useState<Message[]>([]);
     const [isLoadingMessages, setIsLoadingMessages] = useState(true);
-    const [nextToken, setNextToken] = useState<string>();
-    
     const [users, setUsers] = useState<BotpressUser[]>([]);
-    const [isLoadingUsers, setIsLoadingUsers] = useState(false);
     const [isLoadingConversations, setIsLoadingConversations] = useState(true);
 
     const auth = getAuth();
@@ -105,7 +101,7 @@ export const Dashboard = () => {
             );
       
             // Batch fetch messages and users for the paginated conversations
-            const messagesPromises = paginatedConversations.map(async (conversation) => {
+       /*     const messagesPromises = paginatedConversations.map(async (conversation) => {
               try {
                 const getMessages = await botpressClient.listMessages({
                   conversationId: conversation.id,
@@ -114,7 +110,7 @@ export const Dashboard = () => {
               } catch (error: any) {
                 return [];
               }
-            });
+            });*/
       
             const usersPromises = paginatedConversations.map(async (conversation) => {
               try {
@@ -132,17 +128,12 @@ export const Dashboard = () => {
                 return [];
               }
             });
-            
-            const messagesResults = await Promise.all(messagesPromises);
-            const allMessages = messagesResults.flat();
             const usersResults = await Promise.all(usersPromises);
             const allUsers = usersResults.flat();
           
             // Update state atomically
             setConversations(paginatedConversations);
             setUsers(allUsers);
-            setMessages(allMessages);
-            setNextToken(nextTokenConversations);
             console.log(allUsers);
           } catch (error: any) {
             console.log(error);
