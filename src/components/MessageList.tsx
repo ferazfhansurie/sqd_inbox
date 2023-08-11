@@ -116,13 +116,13 @@ export const MessageList = ({
 			)}
 		  </div>
 		  <div className="flex gap-2 items-center flex-shrink-0 mt-5">
-			<input
-			  type="text"
-			  className="w-full rounded-xl border-2 p-4"
-			  placeholder="Type something..."
-			  value={messageInput}
-			  onChange={(e) => setMessageInput(e.target.value)}
-			/>
+		  <input
+  type="text"
+  className="w-full rounded-xl border-2 p-4 black-text"
+  placeholder="Type something..."
+  value={messageInput}
+  onChange={(e) => setMessageInput(e.target.value)}
+/>
 			<button
 			  className="bg-blue-500 text-white rounded-xl p-4"
 			  onClick={() => handleSendMessage()}

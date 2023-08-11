@@ -377,7 +377,9 @@
 .pagination-container button:hover {
   background-color: #f0f0f0;
 }
-
+.black-text {
+  color: black;
+}
 .pagination-container span {
   margin: 0 1rem;
   font-family: 'Quicksand', sans-serif;
