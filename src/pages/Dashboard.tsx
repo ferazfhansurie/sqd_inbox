@@ -4,7 +4,7 @@ import { Conversation, } from '@botpress/client';
 import { ConversationDetails } from '../components/ConversationDetails';
 import { ConversationList } from '../components/ConversationList';
 import { useEffect, useState } from 'react';
-import { User as BotpressUser, Message } from '@botpress/client/dist/gen';
+import { User as BotpressUser } from '@botpress/client/dist/gen';
 import defaultAvatarImg from '../assets/jutaicon.png';
 import '../style.css';
 
@@ -26,7 +26,7 @@ export const Dashboard = () => {
 	  const [searchQuery, setSearchQuery] = useState<string>('');
     const [isLoadingMessages, setIsLoadingMessages] = useState(true);
     const [users, setUsers] = useState<BotpressUser[]>([]);
-    const [messages, setMessages] = useState<Message[]>([]);
+
     const [isLoadingConversations, setIsLoadingConversations] = useState(true);
 
   useEffect(() => {
@@ -68,27 +68,7 @@ export const Dashboard = () => {
         startIndex,
         endIndex
       );
-      const messagePromises = paginatedConversations.map(async (conversation) => {
-        try {
-          const getMessage = await botpressClient.listMessages({
-            conversationId: conversation.id,
-          });
-
-          const messageWithData = getMessage.messages.map((message) => ({
-            ...message,
-            conversationId: conversation.id, // Include conversation ID for reference
-          }));
-
-          return messageWithData;
-        } catch (error: any) {
-          return [];
-        }
-      });
-
-      const messageResults = await Promise.all(messagePromises);
-      const allMessages = messageResults.flat();
-      setMessages(allMessages);
-      console.log(allMessages);
+  
       const usersPromises = paginatedConversations.map(async (conversation) => {
         try {
           const getUsers = await botpressClient.listUsers({
