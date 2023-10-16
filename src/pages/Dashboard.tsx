@@ -3,14 +3,9 @@ import defaultAvatarImg from '../assets/juta_icon.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChartBar,
-  faEnvelope,
   faCalendar,
   faUsers,
   faHandshake,
-  faDollarSign,
-  faBullhorn,
-  faCogs,
-  faClipboardList,
   faRobot
 } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';

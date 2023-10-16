@@ -5,11 +5,7 @@ import { ConversationDetails } from '../components/ConversationDetails';
 import { ConversationList } from '../components/ConversationList';
 import { useEffect, useState } from 'react';
 import { User as BotpressUser } from '@botpress/client/dist/gen';
-import defaultAvatarImg from '../assets/juta_icon.png';
 import '../style.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartBar, faEnvelope, faCalendar, faUsers, faHandshake, faDollarSign, faBullhorn, faCogs, faClipboardList, faRobot } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
 
 export interface ConversationWithMessagesAndUsers extends Conversation {
 	// messages: Message[];
