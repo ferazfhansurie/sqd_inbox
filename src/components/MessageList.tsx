@@ -80,15 +80,15 @@ export const MessageList = ({
 			{isDefinedAndHasItems(messages) ? (
 			  <>
 				{loadOlderMessages && (
-				  <button
-					className="rounded-xl p-2 border-2 self-center mb-5"
-					onClick={() => {
-					  loadOlderMessages();
-					  setClickedLoadOlderMessages(true);
-					}}
-				  >
-					Load older messages
-				  </button>
+				 <button
+				 className="rounded-xl p-2 border-2 self-center mb-5 bg-custom-green text-" // Use a custom class for the green background color and white text color
+				 onClick={() => {
+				   loadOlderMessages();
+				   setClickedLoadOlderMessages(true);
+				 }}
+			   >
+				 Load older messages
+			   </button>
 				)}
 				{messageList
 				  .sort(
@@ -116,25 +116,25 @@ export const MessageList = ({
 			)}
 		  </div>
 		  <div className="flex gap-2 items-center flex-shrink-0 mt-5">
-		  <input
-  type="text"
-  className="w-full rounded-xl border-2 p-4 black-text"
-  placeholder="Type something..."
-  value={messageInput}
-  onChange={(e) => setMessageInput(e.target.value)}
-/>
-			<button
-			  className="bg-blue-500 text-white rounded-xl p-4"
-			  onClick={() => handleSendMessage()}
-			  onKeyDown={(e) => {
-				if (e.key === 'Enter' || e.keyCode === 13) {
-				  handleSendMessage();
-				}
-			  }}
-			>
-			  Send
-			</button>
-		  </div>
+  <input
+    type="text"
+    className="w-full rounded-xl border-2 p-4 text-black" // Remove the 'black-text' class and use the default text color
+    placeholder="Type something..."
+    value={messageInput}
+    onChange={(e) => setMessageInput(e.target.value)}
+  />
+  <button
+    className="bg-custom-green text-black rounded-xl p-4" // Use a custom class for the green background color
+    onClick={() => handleSendMessage()}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter' || e.keyCode === 13) {
+        handleSendMessage();
+      }
+    }}
+  >
+    Send
+  </button>
+</div>
 		</div>
 	  );
 	};

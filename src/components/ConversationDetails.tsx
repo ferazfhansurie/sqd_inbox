@@ -134,8 +134,8 @@ export const ConversationDetails = ({
 	}, [messages]);
   
 	return (
-		<div className={`flex ${className}`}>
-		  <div className="w-2/3 flex flex-col">
+		<div className={`flex ${className} h-full`}>
+		  <div className="w-2/3 flex flex-col h-full">
 			{isLoadingMessages ? (
 			  <div className="self-center bg-black-100 p-5 text-lg font-medium rounded-xl my-auto">
 				Loading messages...

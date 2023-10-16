@@ -39,12 +39,12 @@ export const MessageItem = ({ message, className }: MessageItemProps) => {
 			} ${className}`}
 		>
 			<div
-				className={`px-3 py-2 rounded-2xl ${
-					message.direction === 'incoming'
-						? 'bg-blue-500 text-white'
-						: 'bg-gray-200'
-				}`}
-			>
+    className={`px-3 py-2 rounded-2xl ${
+        message.direction === 'incoming'
+            ? 'bg-light-gray text-black' // Use a light gray background and white text
+            : 'bg-custom-green text-black' // Use the custom green background and white text
+    }`}
+>
 				{isTextPayload(message.payload) ? (
 					<span className="whitespace-pre-line">
 						{message.payload.text}

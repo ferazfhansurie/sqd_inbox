@@ -12,7 +12,7 @@ export function UserItem({ user }: UserItemProps) {
   const isBot = user.id === import.meta.env.VITE_BOTPRESS_BOT_ID_AS_USER;
 
   return (
-    <div className={`flex flex-col gap-2 rounded-xl p-4 w-full border-2 ${isBot ? 'border-blue-500' : 'border-gray-300'}`}>
+    <div className={`flex flex-col gap-2 rounded-xl p-4 w-full border-2 ${isBot ? 'border-blue-500' : 'border-black-300'}`}>
       <div className="flex gap-2 items-center">
         <img
           src={defaultAvatarImg}
@@ -20,11 +20,11 @@ export function UserItem({ user }: UserItemProps) {
           className="h-10 rounded-full"
         />
         <div className="flex flex-col">
-          <span className={`font-medium ${isBot ? 'text-blue-500' : 'text-gray-800'}`}>
+          <span className= "black-text">
             {isBot ? 'Bot' : user.tags['whatsapp:name'] || 'User with no name'}
           </span>
           {!isBot && (
-            <span className="text-sm text-gray-400">
+            <span className="black-text">
               {user.tags['whatsapp:userId'] || 'No WhatsApp user id'}
             </span>
           )}
@@ -53,7 +53,7 @@ export function UserItem({ user }: UserItemProps) {
         </>
       )}
       <p className="flex items-center gap-1">
-        <span className="text-sm text-gray-400">
+        <span className="black-text">
           Created at{' '}
           {format(new Date(user.createdAt), 'dd/MM/yyyy HH:mm', {
             locale: ptBR,

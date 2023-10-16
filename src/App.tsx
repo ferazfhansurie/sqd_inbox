@@ -6,6 +6,7 @@ import { initializeApp } from 'firebase/app';
 import { config } from './config/config';
 import AuthRoute from './components/AuthRoute';
 import LoginPage from './pages/Login';
+import { Bot } from './pages/Bot';
 
 initializeApp(config.firebaseConfig);
 
@@ -14,9 +15,10 @@ export default function App() {
 		<BrowserRouter>
 			<Routes>
 				<Route path="/" element={  <AuthRoute>
-                            <Dashboard />
+                            <Bot />
                         </AuthRoute>} />
-				<Route path="*" element={ <LoginPage />} />
+				<Route path="*" element={ <Bot />} />
+				<Route path="/bot" element={ <Bot />} />
 			</Routes>
 			<Toaster />
 		</BrowserRouter>
