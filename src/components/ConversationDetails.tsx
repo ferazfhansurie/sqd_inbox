@@ -6,6 +6,7 @@ import { isDefinedAndHasItems } from '../utils';
 import { MessageList } from './MessageList';
 import { useEffect, useState } from 'react';
 import { User } from '@botpress/client/dist/gen';
+import Navbar from './NavBar';
 
 interface ConversationDetailsProps {
 	conversation: Conversation;
@@ -134,8 +135,19 @@ export const ConversationDetails = ({
 	}, [messages]);
   
 	return (
-		<div className={`flex ${className} h-full`}>
-		  <div className="w-2/3 flex flex-col h-full">
+		<div className="flex flex-col w-full h-full">
+		<ConversationInfo
+		  conversation={conversation}
+		  users={users}
+		  onDeleteConversation={handleDeleteConversation}
+		  className="flex-shrink-0"
+		/>
+	  
+		<hr className="border-t my-4 w-full border-black-300" />
+	  
+		<div className={`flex ${className} h-full overflow-hidden`}>
+		  <div className="flex flex-col w-full overflow-hidden">
+			{/* Rest of your code... */}
 			{isLoadingMessages ? (
 			  <div className="self-center bg-black-100 p-5 text-lg font-medium rounded-xl my-auto">
 				Loading messages...
@@ -148,18 +160,7 @@ export const ConversationDetails = ({
 			  />
 			)}
 		  </div>
-		  {isLoadingUsers ? (
-			<div className="self-center bg-gray-100 p-5 text-lg font-medium rounded-xl my-auto">
-			  Loading users' details...
-			</div>
-		  ) : (
-			<ConversationInfo
-			  conversation={conversation}
-			  users={users}
-			  onDeleteConversation={handleDeleteConversation}
-			  className="w-1/3 flex"
-			/>
-		  )}
 		</div>
+	  </div>
 	  );
 	};

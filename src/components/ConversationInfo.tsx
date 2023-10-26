@@ -28,109 +28,45 @@ export const ConversationInfo = ({
 	onDeleteConversation,
 	className,
 }: ConversationInfoProps) => {
-	return (
-		<div className={`flex flex-col gap-8 p-4 ${className}`}>
-			{/* <div className="flex items-center gap-4">
-				<div className="flex-shrink-0 self-center w-20 h-20 rounded-full bg-gray-300 mr-2" />
-				<input
-					className="w-full px-3 py-1 rounded-xl border-2 text-lg font-medium"
-					{...register('name', { required: false, disabled: true })}
-				/>
-			</div> */}
-			{/* Phone */}
-			{/* <div className="flex items-center relative">
-				<span className="absolute top-2 left-2">📞</span>
-				<input
-					className="w-full pl-10 pr-3 py-1 rounded-xl border-2"
-					{...register('phone', { required: false, disabled: true })}
-				/>
-			</div> */}
-			{/* Textarea for details */}
-			{/* <div className="flex items-center relative">
-				<span className="absolute top-2 left-2">💬</span>
-				<textarea
-					className="w-full pl-10 pr-3 py-1 rounded-lg border-2"
-					placeholder="Sobre o usuário..."
-					{...register('about', { required: false, disabled: true })}
-				/>
-			</div> */}
-			{/* <button
-				className="bg-gray-400 font-medium text-white rounded-xl p-2"
-				type="submit"
-				disabled={true}
-			>
-				Atualizar conversa
-			</button> */}
+	 return (
+		<div className={`flex gap-8 p-4 ${className}`}>
 
-			<div>
-				{users.length > 0 ? (
-					<div className="flex flex-wrap gap-2">
-						{users
-							.sort((a) =>
-								// to have the bot at the bottom always
-								a.id ===
-								import.meta.env.VITE_BOTPRESS_BOT_ID_AS_USER
-									? 1
-									: -1
-							)
-							.map((user) => {
-								return <UserItem user={user} />;
-							})}
-					</div>
-				) : (
-					<div className="black-text">
-						No user info
-					</div>
-				)}
+	
+	  
+		<div>
+		  {users.length > 0 ? (
+			<div className="flex flex-wrap gap-2">
+			<UserItem key={users[1].id} user={users[1]} />
 			</div>
-
-			<hr />
-			<div className="flex flex-col items-center gap-2">
-				{Object.keys(conversation.tags).map((tag) => {
-					return (
-						<span
-							className="black-text"
-							key={tag}
-						>
-							🏷️ <span className="font-medium">{tag}</span>{' '}
-							<span className="">{conversation.tags[tag]}</span>
-						</span>
-					);
-				})}
-			</div>
-			<hr />
-
-			{/* Conversation creation date */}
-			<div className="flex flex-col gap-2">
-				<p className="flex items-center gap-1">
-					<span>📅</span>
-					<span className="black-text">
-						Started at{' '}
-						{format(
-							new Date(conversation.createdAt),
-							'dd/MM/yyyy HH:mm'
-						)}
-					</span>
-				</p>
-				<p className="flex items-center gap-1">
-					<span>📝</span>
-					<span className="black-text">
-						Updated at{' '}
-						{format(
-							new Date(conversation.updatedAt),
-							'dd/MM/yyyy HH:mm'
-						)}
-					</span>
-				</p>
-			</div>
-			<hr />
-			<button
-				className="bg-red-500 font-medium text-white rounded-xl p-2"
-				type="button"
-				onClick={() => onDeleteConversation(conversation.id)}
-			>
-				Delete conversation
-			</button>
+		  ) : (
+			<div className="text-gray-600">No user info</div>
+		  )}
 		</div>
-	);
+	  
+	
+	  
+		<div className="flex gap-1">
+  <p className="flex items-center gap-1">
+    <span>📅</span>
+    <span className="font-medium">
+      Started at {format(new Date(conversation.createdAt), 'dd/MM/yyyy HH:mm')}
+    </span>
+  </p>
+  <p className="flex items-center gap-1">
+    <span>📝</span>
+    <span className="font-medium">
+      Updated at {format(new Date(conversation.updatedAt), 'dd/MM/yyyy HH:mm')}
+    </span>
+  </p>
+</div>
+	  
+		<button
+		  className="bg-red-500 text-white rounded-xl p-2 "
+		  type="button"
+		  onClick={() => onDeleteConversation(conversation.id)}
+		>
+		  Delete
+		</button>
+	  </div>
+  );
 };

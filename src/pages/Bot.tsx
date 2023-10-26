@@ -51,9 +51,15 @@ export const Bot = () => {
         }
 
         allConversations.push(...listConversations.conversations);
-        nextTokenConversations = listConversations.meta.nextToken;
+        
       } while (nextTokenConversations);
-
+      for (const conversation of allConversations) {
+        const messages = await botpressClient.listMessages({
+          conversationId: conversation.id,
+        });
+  
+        console.log(`Messages for Conversation ${conversation.id}:`, messages);
+      }
       const filteredConversations = allConversations.filter((conversation) =>
         conversation.tags?.['whatsapp:userPhone']?.includes(searchQuery)
       );
