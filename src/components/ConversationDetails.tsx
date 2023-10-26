@@ -6,7 +6,7 @@ import { isDefinedAndHasItems } from '../utils';
 import { MessageList } from './MessageList';
 import { useEffect, useState } from 'react';
 import { User } from '@botpress/client/dist/gen';
-import Navbar from './NavBar';
+
 
 interface ConversationDetailsProps {
 	conversation: Conversation;
@@ -24,7 +24,7 @@ export const ConversationDetails = ({
 	const [nextToken, setNextToken] = useState<string>();
   
 	const [users, setUsers] = useState<User[]>([]);
-	const [isLoadingUsers, setIsLoadingUsers] = useState(false);
+	const [, setIsLoadingUsers] = useState(false);
   
 	async function loadOlderMessages() {
 	  try {
