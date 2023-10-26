@@ -24,7 +24,7 @@ export const ConversationDetails = ({
 	const [nextToken, setNextToken] = useState<string>();
   
 	const [users, setUsers] = useState<User[]>([]);
-	const [, setIsLoadingUsers] = useState(false);
+	const [isLoadingUsers, setIsLoadingUsers] = useState(false);
   
 	async function loadOlderMessages() {
 	  try {
@@ -136,12 +136,18 @@ export const ConversationDetails = ({
   
 	return (
 		<div className="flex flex-col w-full h-full">
-		<ConversationInfo
-		  conversation={conversation}
-		  users={users}
-		  onDeleteConversation={handleDeleteConversation}
-		  className="flex-shrink-0"
-		/>
+		{isLoadingUsers ? (
+			<div className="self-center bg-gray-100 p-5 text-lg font-medium rounded-xl my-auto">
+			  Loading users' details...
+			</div>
+		  ) : (
+			<ConversationInfo
+			  conversation={conversation}
+			  users={users}
+			  onDeleteConversation={handleDeleteConversation}
+			  className="flex-shrink-0"
+			/>
+		  )}
 	  
 		<hr className="border-t my-4 w-full border-black-300" />
 	  
